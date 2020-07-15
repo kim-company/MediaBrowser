@@ -1799,6 +1799,9 @@ func floorcgf(x: CGFloat) -> CGFloat {
                 return
             } else if !startOnGrid && gridController != nil {
                 hideGrid()
+		if let d = delegate {
+            d.mediaBrowserDidFinishModalPresentation(mediaBrowser: self)
+            }
                 return
             }
         }
@@ -1820,7 +1823,7 @@ func floorcgf(x: CGFloat) -> CGFloat {
         }
     }
     
-    internal func defaultActionForMedia(atIndex index: Int) {
+    public func defaultActionForMedia(atIndex index: Int) {
         // Only react when image has loaded
         if let photo = mediaAtIndex(index: index) {
             if numberOfMedias > 0 && photo.underlyingImage != nil {
