@@ -393,21 +393,27 @@ func floorcgf(x: CGFloat) -> CGFloat {
                 name: arrowPathFormat + "Left",
                 inBundle: Bundle(for: MediaBrowser.self))
             
-            let nextButtonImage = UIImage.imageForResourcePath(
-                name: arrowPathFormat + "Right",
-                inBundle: Bundle(for: MediaBrowser.self))
-            
             previousButton = UIBarButtonItem(
                 image: previousButtonImage,
                 style: UIBarButtonItem.Style.plain,
                 target: self,
                 action: #selector(MediaBrowser.gotoPreviousPage))
+            if #available(iOS 26.0, *) {
+                previousButton?.hidesSharedBackground = true
+            }
+            
+            let nextButtonImage = UIImage.imageForResourcePath(
+                name: arrowPathFormat + "Right",
+                inBundle: Bundle(for: MediaBrowser.self))
             
             nextButton = UIBarButtonItem(
                 image: nextButtonImage,
                 style: UIBarButtonItem.Style.plain,
                 target: self,
                 action: #selector(MediaBrowser.gotoNextPage))
+            if #available(iOS 26.0, *) {
+                nextButton?.hidesSharedBackground = true
+            }
         }
         
         if displayActionButton {
@@ -415,6 +421,9 @@ func floorcgf(x: CGFloat) -> CGFloat {
                 barButtonSystemItem: UIBarButtonItem.SystemItem.action,
                 target: self,
                 action: #selector(actionButtonPressed(_:)))
+            if #available(iOS 26.0, *) {
+                actionButton?.hidesSharedBackground = true
+            }
         }
         
         reloadData()
@@ -486,6 +495,9 @@ func floorcgf(x: CGFloat) -> CGFloat {
                     style: .done,
                     target: self,
                     action: #selector(doneButtonPressed))
+                if #available(iOS 26.0, *) {
+                    doneButton?.hidesSharedBackground = true
+                }
 
                 // Set appearance
                 if let done = doneButton {
@@ -502,6 +514,9 @@ func floorcgf(x: CGFloat) -> CGFloat {
                         previousViewController.title
                     
                     let newBackButton = UIBarButtonItem(title: backButtonTitle, style: .plain, target: nil, action: nil)
+                    if #available(iOS 26.0, *) {
+                        newBackButton.hidesSharedBackground = true
+                    }
                     
                     // Appearance
                     newBackButton.setBackButtonBackgroundImage(nil, for: .normal, barMetrics: .default)
@@ -560,6 +575,12 @@ func floorcgf(x: CGFloat) -> CGFloat {
                 }
             }
             items.append(fixedSpace)
+        }
+        
+        for item in items {
+            if #available(iOS 26.0, *), let barItem = item as? UIBarButtonItem {
+                barItem.hidesSharedBackground = true
+            }
         }
 
         // Toolbar visibility
