@@ -24,23 +24,23 @@ func floorcgf(x: CGFloat) -> CGFloat {
     internal var mediaArray = [Media?]()
     internal var thumbMedias = [Media?]()
     /// Provided via init
-	internal var fixedMediasArray: [Media]?
-	
-	// Views
-	internal var pagingScrollView = UIScrollView()
-	
-	// Paging & layout
-	internal var visiblePages = Set<MediaZoomingScrollView>()
+    internal var fixedMediasArray: [Media]?
+    
+    // Views
+    internal var pagingScrollView = UIScrollView()
+    
+    // Paging & layout
+    internal var visiblePages = Set<MediaZoomingScrollView>()
     internal var recycledPages = Set<MediaZoomingScrollView>()
-	internal var currentPageIndex = 0
+    internal var currentPageIndex = 0
     internal var previousPageIndex = Int.max
     internal var previousLayoutBounds = CGRect.zero
-	internal var pageIndexBeforeRotation = 0
-	
-	// Navigation & controls
-	internal var toolbar = UIToolbar()
-	internal var controlVisibilityTimer: Timer?
-	internal var previousButton: UIBarButtonItem?
+    internal var pageIndexBeforeRotation = 0
+    
+    // Navigation & controls
+    internal var toolbar = UIToolbar()
+    internal var controlVisibilityTimer: Timer?
+    internal var previousButton: UIBarButtonItem?
     internal var nextButton: UIBarButtonItem?
     internal var actionButton: UIBarButtonItem?
     internal var doneButton: UIBarButtonItem?
@@ -118,10 +118,10 @@ func floorcgf(x: CGFloat) -> CGFloat {
     public var leaveStatusBarAlone = false
     
     /// Perform layout
-	public var performingLayout = false
+    public var performingLayout = false
     
     /// Support rotating
-	public var rotating = false
+    public var rotating = false
     
     /// Active as in it's in the view heirarchy
     public var viewIsActive = false
@@ -400,6 +400,7 @@ func floorcgf(x: CGFloat) -> CGFloat {
                 action: #selector(MediaBrowser.gotoPreviousPage))
             if #available(iOS 26.0, *) {
                 previousButton?.hidesSharedBackground = true
+                previousButton?.tintColor = .white
             }
             
             let nextButtonImage = UIImage.imageForResourcePath(
@@ -413,6 +414,7 @@ func floorcgf(x: CGFloat) -> CGFloat {
                 action: #selector(MediaBrowser.gotoNextPage))
             if #available(iOS 26.0, *) {
                 nextButton?.hidesSharedBackground = true
+                nextButton?.tintColor = .white
             }
         }
         
@@ -423,6 +425,7 @@ func floorcgf(x: CGFloat) -> CGFloat {
                 action: #selector(actionButtonPressed(_:)))
             if #available(iOS 26.0, *) {
                 actionButton?.hidesSharedBackground = true
+                actionButton?.tintColor = .white
             }
         }
         
@@ -516,6 +519,7 @@ func floorcgf(x: CGFloat) -> CGFloat {
                     let newBackButton = UIBarButtonItem(title: backButtonTitle, style: .plain, target: nil, action: nil)
                     if #available(iOS 26.0, *) {
                         newBackButton.hidesSharedBackground = true
+                        newBackButton.tintColor = .white
                     }
                     
                     // Appearance
@@ -571,7 +575,7 @@ func floorcgf(x: CGFloat) -> CGFloat {
             if actionButton != nil {
                 // only show Action button on top right if this place is empty (no Done button there)
                 if nil == self.navigationItem.rightBarButtonItem {
-                	navigationItem.rightBarButtonItem = actionButton!
+                    navigationItem.rightBarButtonItem = actionButton!
                 }
             }
             items.append(fixedSpace)
@@ -580,6 +584,7 @@ func floorcgf(x: CGFloat) -> CGFloat {
         for item in items {
             if #available(iOS 26.0, *), let barItem = item as? UIBarButtonItem {
                 barItem.hidesSharedBackground = true
+                barItem.tintColor = .white
             }
         }
 
@@ -1820,7 +1825,7 @@ func floorcgf(x: CGFloat) -> CGFloat {
                 return
             } else if !startOnGrid && gridController != nil {
                 hideGrid()
-		if let d = delegate {
+        if let d = delegate {
             d.mediaBrowserDidFinishModalPresentation(mediaBrowser: self)
             }
                 return
