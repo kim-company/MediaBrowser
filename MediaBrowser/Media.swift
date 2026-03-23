@@ -8,7 +8,6 @@
 //
 
 import UIKit
-import AssetsLibrary
 import Photos
 import SDWebImage
 
@@ -230,26 +229,30 @@ open class Media: NSObject {
     
     // Load from asset library async
     private func performLoadUnderlyingImageAndNotifyWithAssetsLibraryURL(url: URL) {
-        DispatchQueue.global(qos: .default).async {
-            let assetslibrary = ALAssetsLibrary()
-            assetslibrary.asset(
-                for: url,
-                resultBlock: { asset in
-                    let rep = asset?.defaultRepresentation()
-                    guard let cgImage = rep?.fullScreenImage().takeUnretainedValue() else { return }
-                    self.underlyingImage = UIImage(cgImage: cgImage)
-                    
-                    DispatchQueue.main.async() {
-                        self.imageLoadingComplete()
-                    }
-            },
-                    failureBlock: { error in
-                        self.underlyingImage = nil
-                        
-                        DispatchQueue.main.async() {
-                            self.imageLoadingComplete()
-                        }
-                    })
+        // Migrate from deprecated ALAssetsLibrary to Photos
+        let results = PHAsset.fetchAssets(withALAssetURLs: [url], options: nil)
+        guard let asset = results.firstObject else {
+            DispatchQueue.main.async {
+                self.underlyingImage = nil
+                self.imageLoadingComplete()
+            }
+            return
+        }
+
+        let options = PHImageRequestOptions()
+        options.isNetworkAccessAllowed = true
+        options.deliveryMode = .highQualityFormat
+        options.resizeMode = .fast
+
+        PHImageManager.default().requestImageDataAndOrientation(for: asset, options: options) { data, _, _, _ in
+            if let data = data, let image = UIImage(data: data) {
+                self.underlyingImage = image
+            } else {
+                self.underlyingImage = nil
+            }
+            DispatchQueue.main.async {
+                self.imageLoadingComplete()
+            }
         }
     }
 
@@ -323,3 +326,4 @@ open class Media: NSObject {
         return uuid == photo.uuid
     }
 }
+
